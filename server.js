@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 const { graphqlHTTP } = require("express-graphql");
 const schema = require("./Server/schema");
 const mongoose = require("mongoose");
@@ -20,13 +21,15 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.send("<h1>Welcome</h1>");
+app.use(express.static("public"));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
 });
 
 const start = async () => {
   try {
-    await connectDB(process.env.MONGO_URI);
+    // await connectDB(process.env.MONGO_URI);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
