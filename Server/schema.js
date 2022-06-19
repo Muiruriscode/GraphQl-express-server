@@ -12,19 +12,6 @@ const {
 const Book = require("../models/bookSchema");
 const Author = require("../models/authorSchema");
 
-let booksArray = [
-  { name: "Valhala", genre: "history", id: "1", authorId: "1" },
-  { name: "Star treck", genre: "Sci-fi", id: "2", authorId: "2" },
-  { name: "Universe", genre: "nature", id: "3", authorId: "3" },
-  { name: "Universe Reloaded", genre: "nature", id: "4", authorId: "3" },
-];
-
-let authorsArray = [
-  { name: "Breda", age: 32, id: "1" },
-  { name: "Spark", age: 35, id: "2" },
-  { name: "Fredrick", age: 43, id: "3" },
-];
-
 const BookType = new GraphQLObjectType({
   name: "Book",
   fields: () => ({
@@ -35,7 +22,6 @@ const BookType = new GraphQLObjectType({
       type: AuthorType,
       resolve(parent, args) {
         return Author.findById(parent.authorId);
-        // return authorsArray.find((item) => item.id === parent.authorId);
       },
     },
   }),
@@ -51,7 +37,6 @@ const AuthorType = new GraphQLObjectType({
       type: new GraphQLList(BookType),
       resolve(parent, args) {
         return Book.find({ authorId: parent.id });
-        // return booksArray.filter((item) => item.authorId === parent.id);
       },
     },
   }),
@@ -65,7 +50,6 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return Book.findById(args.id);
-        // return booksArray.find((item) => item.id === args.id);
       },
     },
     Author: {
@@ -73,21 +57,18 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return Author.findById(args.id);
-        // return authorsArray.find((item) => item.id === args.id);
       },
     },
     Books: {
       type: new GraphQLList(BookType),
       resolve(parent, args) {
         return Book.find({});
-        // return booksArray;
       },
     },
     Authors: {
       type: new GraphQLList(AuthorType),
       resolve(parent, args) {
         return Author.find({});
-        // return authorsArray;
       },
     },
   },
